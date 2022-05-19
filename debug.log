@@ -1,0 +1,3 @@
+[0519/155205.220:ERROR:registration_protocol_win.cc(102)] CreateFile: Le fichier spécifié est introuvable. (0x2)
+[0519/155205.250:ERROR:crashpad_client_win.cc(808)] not connected
+[0519/155205.301:ERROR:registration_protocol_win.cc(102)] CreateFile: Le fichier spécifié est introuvable. (0x2)
