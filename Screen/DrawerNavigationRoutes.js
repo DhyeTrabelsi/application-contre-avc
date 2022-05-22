@@ -7,62 +7,90 @@ import React from 'react';
 // Import Navigators from React Navigation
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Import Screens
-import HomeScreen from './DrawerScreens/HomeScreen';
-import SettingsScreen from './DrawerScreens/SettingScreen';
+import MedecineScreen from './DrawerScreens/MedecineScreen';
+import EditProfile from './DrawerScreens/EditProfile';
+import ProfileScreen from './DrawerScreens/ProfileScreen';
 import CustomSidebarMenu from './Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Components/NavigationDrawerHeader';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+const profilestack = createStackNavigator();
 
-const HomeScreenStack = ({navigation}) => {
+const MedecineScreenStack = ({navigation}) => {
   return (
-    <Stack.Navigator initialRouteName="HomeScreen">
+    <Stack.Navigator initialRouteName="MedecineScreen">
       <Stack.Screen
-        name="HomeScreen"
-        component={HomeScreen}
+        name="MedecineScreen"
+        component={MedecineScreen}
         options={{
-          title: 'Home', //Set Header Title
+          title: 'Medecine', //Set Header Title
           headerLeft : () => (
             <NavigationDrawerHeader navigationProps={navigation} />
           ),
           headerStyle: {
             backgroundColor: '#FDF6F0', //Set Header color
           },
-          headerTintColor: '#7D5A50', //Set Header text color
+          headerTintColor: '#6F4C5B', //Set Header text color
           headerTitleStyle: {
             fontWeight: 'bold', //Set Header text style
           },
         }}
       />
+       
     </Stack.Navigator>
   );
 };
 
-const SettingScreenStack = ({navigation}) => {
+const ProfileScreenStack = ({navigation}) => {
   return (
     <Stack.Navigator
-      initialRouteName="SettingsScreen"
+      initialRouteName="ProfileScreen"
       screenOptions={{
-        headerLeft : () => (
-          <NavigationDrawerHeader navigationProps={navigation} />
-        ),
+       
         headerStyle: {
           backgroundColor: '#FDF6F0', //Set Header color
         },
-        headerTintColor: '#7D5A50', //Set Header text color
+        headerTintColor: '#6F4C5B', //Set Header text color
         headerTitleStyle: {
           fontWeight: 'bold', //Set Header text style
         },
       }}>
       <Stack.Screen
-        name="SettingsScreen"
-        component={SettingsScreen}
+        name="ProfileScreen"
+        component={ProfileScreen}
         options={{
-          title: 'Settings', //Set Header Title
+          title: 'Profil',
+          headerLeft : () => (
+            <NavigationDrawerHeader navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#FDF6F0', //Set Header color
+          },
+          headerRight : () => (
+            <Icon name="account-edit" size={25} color='#6F4C5B'
+            onPress={() => navigation.navigate('EditProfile')}
+            style={{ marginRight :15}}
+          />
+          ), //Set Header Title
         }}
+      />
+      <profilestack.Screen
+        name="EditProfile"
+        options={{
+          title: 'Editer le profil',
+          headerStyle: {
+            backgroundColor: '#FDF6F0', //Set Header color
+          },
+          headerTintColor: '#6F4C5B', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+        component={EditProfile}
       />
     </Stack.Navigator>
   );
@@ -86,15 +114,17 @@ const DrawerNavigatorRoutes = (props) => {
         drawerActiveBackgroundColor: '#FDF6F0',
       }}
       drawerContent={CustomSidebarMenu}>
+      
       <Drawer.Screen
-        name="HomeScreenStack"
-        options={{drawerLabel: 'Home Screen'}}
-        component={HomeScreenStack}
+        name="ProfileScreenStack"
+        options={{drawerLabel: 'Profile'}}
+        component={ProfileScreenStack}
       />
       <Drawer.Screen
-        name="SettingScreenStack"
-        options={{drawerLabel: 'Setting Screen'}}
-        component={SettingScreenStack}
+        name="MedecineScreenStack"
+        options={{drawerLabel: 'Medecine'}}
+        component={MedecineScreenStack}
+        
       />
     </Drawer.Navigator>
   );

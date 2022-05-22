@@ -95,7 +95,7 @@ const stylesSidebar = StyleSheet.create({
   profileHeaderLine: {
     height : 1,
     marginHorizontal: 20,
-    backgroundColor: '#F5C6AA',
+    backgroundColor: '#f2f2f2',
     marginTop : 15,
   },
 });

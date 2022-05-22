@@ -6,7 +6,8 @@ import React from 'react';
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
- 
+import AsyncStorage from '@react-native-community/async-storage';
+
 // Import Screens
 import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
@@ -30,17 +31,30 @@ const Auth = () => {
 };
  
 const App = () => {
+  const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
 
+  React.useEffect(() => { (async () => {
+    const appData = await AsyncStorage.getItem('isAppFirstLaunched');
+    if (appData == null) {
+      setIsAppFirstLaunched(true);
+      AsyncStorage.setItem('isAppFirstLaunched', 'false');
+    } else {
+      setIsAppFirstLaunched(false);
+    }
+
+  
+  })();
+}, []);
   return (
+    isAppFirstLaunched != null && (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="OnboardingScreen">
-        {/* SplashScreen which will come once for 5 Seconds */}
+      {isAppFirstLaunched && (
  <Stack.Screen
           name="OnboardingScreen"
           component={OnboardingScreen}
-          // Hiding header for Splash Screen
           options={{headerShown: false}}
-        /> 
+        /> )}
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
@@ -62,6 +76,7 @@ const App = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    )
   );
 };
  

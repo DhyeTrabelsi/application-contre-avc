@@ -14,7 +14,7 @@ const NavigationDrawerHeader = (props) => {
   return (
     <View style={{flexDirection: 'row'}}>
       <TouchableOpacity onPress={toggleDrawer}>
-      <Icon name="menu-outline" size={25} color='#7D5A50'
+      <Icon name="menu-outline" size={25} color='#6F4C5B'
 
           style={{ marginLeft :15}}
         />
