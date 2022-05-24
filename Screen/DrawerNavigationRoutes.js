@@ -32,9 +32,9 @@ const MedecineScreenStack = ({navigation}) => {
             <NavigationDrawerHeader navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: '#FDF6F0', //Set Header color
+            backgroundColor: '#E8F9FD', //Set Header color
           },
-          headerTintColor: '#6F4C5B', //Set Header text color
+          headerTintColor: '#495D7D', //Set Header text color
           headerTitleStyle: {
             fontWeight: 'bold', //Set Header text style
           },
@@ -52,9 +52,9 @@ const ProfileScreenStack = ({navigation}) => {
       screenOptions={{
        
         headerStyle: {
-          backgroundColor: '#FDF6F0', //Set Header color
+          backgroundColor: '#E8F9FD', //Set Header color
         },
-        headerTintColor: '#6F4C5B', //Set Header text color
+        headerTintColor: '#495D7D', //Set Header text color
         headerTitleStyle: {
           fontWeight: 'bold', //Set Header text style
         },
@@ -68,10 +68,10 @@ const ProfileScreenStack = ({navigation}) => {
             <NavigationDrawerHeader navigationProps={navigation} />
           ),
           headerStyle: {
-            backgroundColor: '#FDF6F0', //Set Header color
+            backgroundColor: '#E8F9FD', //Set Header color
           },
           headerRight : () => (
-            <Icon name="account-edit" size={25} color='#6F4C5B'
+            <Icon name="account-edit" size={25} color='#495D7D'
             onPress={() => navigation.navigate('EditProfile')}
             style={{ marginRight :15}}
           />
@@ -83,9 +83,9 @@ const ProfileScreenStack = ({navigation}) => {
         options={{
           title: 'Editer le profil',
           headerStyle: {
-            backgroundColor: '#FDF6F0', //Set Header color
+            backgroundColor: '#E8F9FD', //Set Header color
           },
-          headerTintColor: '#6F4C5B', //Set Header text color
+          headerTintColor: '#495D7D', //Set Header text color
           headerTitleStyle: {
             fontWeight: 'bold', //Set Header text style
           },
@@ -101,7 +101,6 @@ const DrawerNavigatorRoutes = (props) => {
     <Drawer.Navigator
   
       screenOptions={{headerShown: false,
-        drawerType: 'slide',
         drawerStyle: {
           width : 250,
         },
@@ -109,9 +108,9 @@ const DrawerNavigatorRoutes = (props) => {
         drawerLabelStyle: {
           fontWeight: 'bold',
         },
-        drawerActiveTintColor:'#E5B299',
-        drawerInactiveTintColor: '#7D5A50',
-        drawerActiveBackgroundColor: '#FDF6F0',
+        drawerActiveTintColor:'#495D7D',
+        drawerInactiveTintColor: '#495D7D',
+        drawerActiveBackgroundColor: '#E8F9FD',
       }}
       drawerContent={CustomSidebarMenu}>
       

@@ -27,7 +27,7 @@ const SplashScreen = ({navigation}) => {
     <View style={styles.container}>
       <Image
         source={require('../Image/logoapp.png')}
-        style={{width : 160,height : 140, resizeMode: 'stretch', }}
+        style={{width : 160,height : 120, resizeMode: 'stretch', }}
       />
 <Text style={styles.text}>  By <Text style={styles.blod}>DHCsys</Text> </Text>
    <ActivityIndicator

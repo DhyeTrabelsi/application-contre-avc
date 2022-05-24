@@ -1,130 +1,247 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
-
-// Import React and Component
-import React, {useState, createRef} from 'react';
+import React, { useState, useEffect , createRef} from 'react';
 import {
   StyleSheet,
-  TextInput,
-  View,
   Text,
+  View,
   ScrollView,
+  StatusBar,
+  TextInput,
+  ImageBackground,
   Image,
-  Keyboard,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
-
+import Loader from './Components/Loader';
+import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-import Loader from './Components/Loader';
+export default function LoginScreen({navigation}) {
+  const loginsuccesspatient = () => { navigation.replace('DrawerNavigationRoutes');
+  }
+  const loginsuccessmedecine = () => { navigation.replace('DrawerNavigationRoutes');
+}
 
-const LoginScreen = ({navigation}) => {
-  const [user, setUser] = useState('');
-  const [userPassword, setUserPassword] = useState('');
+  const [activeTab, setActiveTab] = useState('Loginpatient');
+
+  useEffect(function () {
+    StatusBar.setBarStyle('light-content', true);
+  }, []);
+
+  function switchTab() {
+    if (activeTab === 'Loginpatient') {
+      setActiveTab('Loginmedecine');
+    } else {
+      setActiveTab('Loginpatient');
+    }
+  }
+
+  function Loginpatient() {
+    const handleSubmitPresspatient = () => {
+      setErrortext('');
+      if (!user) {
+        alert("Veuillez remplir votre nom d'utilisateur");
+        return;
+      }
+      if (!userPassword) {
+        alert('Veuillez remplir votre mot de passe');
+        return;
+      }
+      setLoading(true);
+      const LoginJson = { "username": String(user), "password":String(userPassword)};
+  
+      axios({
+        headers: { 'Content-Type': 'application/json'},
+        method: 'post',
+        url:'http://192.168.1.124:8000/api/login/patient/',
+        data: LoginJson,
+      }).then(response=>{
+        AsyncStorage.setItem('user_id', user);
+        console.log(AsyncStorage.getItem('user_id'));
+        loginsuccesspatient();
+          })
+          .catch((error) => {
+          console.log(error)
+
+          if(error.response.data.detail === 'User not found!'){
+            console.log(error)
+            setLoading(false);
+
+            alert("il n'y a pas de compte patient avec ce nom...");
+
+            }
+            if(error.response.data.detail ===  'Incorrect password!'){
+              setLoading(false);
+
+              alert("Mot de passe du compte patient incorrect avec ce nom...");
+  
+            }
+        })
+  }
+    const [user, setUser] = useState('');
+    const [userPassword, setUserPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [errortext, setErrortext] = useState('');
+    const passwordInputRef = createRef();
+    return (
+      <View style={styles.mainBody}>
+           <Loader loading={loading} />
+        <ScrollView
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            flex: 1,
+            marginTop: 50
+          }}>
+          <View>
+            <KeyboardAvoidingView enabled>
+              <View style={{alignItems: 'center'}}>
+               
+              </View>
+              <View style={styles.SectionStyle}>
+  
+                <TextInput
+                
+                  style={styles.inputStyle}
+                  onChangeText={(User) => setUser(User)}
+                  placeholder="Entrer le nom de patient"
+                  placeholderTextColor="#8b9cb5"
+                  color="#15143a"
+                  autoCapitalize="none"
+                  returnKeyType="next"
+                  onSubmitEditing={() =>
+                    passwordInputRef.current && passwordInputRef.current.focus()
+                  }
+                  underlineColorAndroid="#f000"
+                  blurOnSubmit={false}
+                />
+                
+              </View>
+              <View style={styles.SectionStyle}>
+                <TextInput
+                  style={styles.inputStyle}
+                  onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                  placeholder="Entrer votre mot de passe" //12345
+                  placeholderTextColor="#8b9cb5"
+                  keyboardType="default"
+                  color="#15143a"
+                  ref={passwordInputRef}
+                  onSubmitEditing={Keyboard.dismiss}
+                  blurOnSubmit={false}
+                  secureTextEntry={true}
+                  underlineColorAndroid="#f000"
+                  returnKeyType="next"
+                />
+              </View>
+              {errortext != '' ? (
+                <Text style={styles.errorTextStyle}> {errortext} </Text>
+              ) : null}
+              <TouchableOpacity
+                style={styles.buttonStyle}
+                activeOpacity={0.5}
+                onPress={handleSubmitPresspatient}>
+                <Text style={styles.buttonTextStyle}>Connexion</Text>
+              </TouchableOpacity>
+              <Text
+                style={styles.TextStyle}
+              >
+                <Text style={styles.text}><Text style={styles.blod}>Pas encore de compte ?</Text>  vous êtes intéressé, contacter rapidement notre service administratif <Text style={styles.blod}>DHCsys</Text> </Text>
+              </Text>
+
+            </KeyboardAvoidingView>
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  function Loginmedecine() {
+    const handleSubmitPressmedecine = () => {
+      setErrortextmedecine('');
+      if (!usermedecine) {
+        alert("Veuillez remplir votre nom d'utilisateur");
+        return;
+      }
+      if (!userPasswordmedecine) {
+        alert('Veuillez remplir votre mot de passe');
+        return;
+      }
+      setLoading(true);
+      const LoginJson = { "username": String(usermedecine), "password":String(userPasswordmedecine)};
+  
+      axios({
+        headers: { 'Content-Type': 'application/json'},
+        method: 'post',
+        url:'http:/192.168.1.124:8000/api/login/medecine/',
+        data: LoginJson,
+      }).then(response=>{
+        AsyncStorage.setItem('user_id', usermedecine);
+        console.log(AsyncStorage.getItem('user_id'));
+        loginsuccessmedecine();
+          })
+          .catch((error) => {
+          console.log(error)
+          setLoading(false);
+
+          if(error.response.data.detail === 'User not found!'){
+            console.log(error)
+            alert("il n'y a pas de compte medecine avec ce nom...");
+}
+            
+            if(error.response.data.detail ===  'Incorrect password!'){
+              alert("Mot de passe du compte medecine incorrect avec ce nom...");
+              setLoading(false);
+  
+            }
+        })
+  } 
+  const [usermedecine, setUsermedecine] = useState('');
+  const [userPasswordmedecine, setUserPasswordmedecine] = useState('');
+  const [errortextmedecine, setErrortextmedecine] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errortext, setErrortext] = useState('');
-
-  const passwordInputRef = createRef();
-
-  const handleSubmitPress = () => {
-    setErrortext('');
-    if (!user) {
-      alert("Veuillez remplir votre nom d'utilisateur");
-      return;
-    }
-    if (!userPassword) {
-      alert('Veuillez remplir votre mot de passe');
-      return;
-    }
-    setLoading(true);
-    let dataToSend = {user_email: user, user_password: userPassword};
-    let formBody = [];
-    for (let key in dataToSend) {
-      let encodedKey = encodeURIComponent(key);
-      let encodedValue = encodeURIComponent(dataToSend[key]);
-      formBody.push(encodedKey + '=' + encodedValue);
-    }
-    formBody = formBody.join('&');
-
-    fetch('https://aboutreact.herokuapp.com/login.php', {
-      method: 'POST',
-      body: formBody,
-      headers: {
-        //Header Defination
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        //Hide Loader
-        setLoading(false);
-        console.log(responseJson);
-        // If server response message same as Data Matched
-        if (responseJson.status == 1) {
-          AsyncStorage.setItem('user_id', user);
-          console.log(AsyncStorage.getItem('user_id'));
-          navigation.replace('DrawerNavigationRoutes');
-        } else {
-          AsyncStorage.setItem('user_id', user);
-          console.log(AsyncStorage.getItem('user_id'));
-          navigation.replace('DrawerNavigationRoutes');
-        }
-      })
-      .catch((error) => {
-        console.log('3');
-        setLoading(false);
-      });
-  };
-
-  return (
-    <View style={styles.mainBody}>
+  const passwordInputRefmedecine = createRef();
+    return (
+      <View style={styles.mainBody}>
       <Loader loading={loading} />
       <ScrollView
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           flex: 1,
-          justifyContent: 'center',
-          alignContent: 'center',
+          marginTop: 50
         }}>
         <View>
           <KeyboardAvoidingView enabled>
             <View style={{alignItems: 'center'}}>
-              <Image
-                source={require('../Image/logoapp.png')}
-                style={{
-                  width : '50%',
-                  height : 100,
-                  resizeMode: 'contain',
-                  margin: 30,
-                }}
-              />
+             
             </View>
             <View style={styles.SectionStyle}>
+
               <TextInput
+              
                 style={styles.inputStyle}
-                onChangeText={(User) => setUser(User)}
-                placeholder="Entrer le nom d'utilisateur" //dummy@abc.com
+                onChangeText={(User) => setUsermedecine(User)}
+                placeholder="Entrer le nom de medecine"
                 placeholderTextColor="#8b9cb5"
                 color="#15143a"
                 autoCapitalize="none"
                 returnKeyType="next"
                 onSubmitEditing={() =>
-                  passwordInputRef.current && passwordInputRef.current.focus()
+                  passwordInputRefmedecine.current && passwordInputRefmedecine.current.focus()
                 }
                 underlineColorAndroid="#f000"
                 blurOnSubmit={false}
               />
+              
             </View>
             <View style={styles.SectionStyle}>
               <TextInput
                 style={styles.inputStyle}
-                onChangeText={(UserPassword) => setUserPassword(UserPassword)}
+                onChangeText={(UserPassword) => setUserPasswordmedecine(UserPassword)}
                 placeholder="Entrer votre mot de passe" //12345
                 placeholderTextColor="#8b9cb5"
                 keyboardType="default"
                 color="#15143a"
-                ref={passwordInputRef}
+                ref={passwordInputRefmedecine}
                 onSubmitEditing={Keyboard.dismiss}
                 blurOnSubmit={false}
                 secureTextEntry={true}
@@ -132,34 +249,171 @@ const LoginScreen = ({navigation}) => {
                 returnKeyType="next"
               />
             </View>
-            {errortext != '' ? (
-              <Text style={styles.errorTextStyle}> {errortext} </Text>
+            {errortextmedecine != '' ? (
+              <Text style={styles.errorTextStyle}> {errortextmedecine} </Text>
             ) : null}
             <TouchableOpacity
               style={styles.buttonStyle}
               activeOpacity={0.5}
-              onPress={handleSubmitPress}>
+              onPress={handleSubmitPressmedecine}>
               <Text style={styles.buttonTextStyle}>Connexion</Text>
             </TouchableOpacity>
             <Text
-              style={styles.registerTextStyle}
+              style={styles.TextStyle}
             >
-              <Text style={styles.text}><Text style={styles.blod}>Pas encore de compte ?</Text>  vous êtes intéressé, contacter rapidement notre service administratif <Text style={styles.blod}>DHCsys</Text> </Text>
             </Text>
+
           </KeyboardAvoidingView>
         </View>
       </ScrollView>
     </View>
   );
-};
-export default LoginScreen;
+  }
+
+  return (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View  style={styles.container}>
+      <View           style={{height : 210,}}           
+ >
+                <ImageBackground
+                  source={require("../Image/header.png")}
+                  style={styles.imageBackground}
+                >
+                 <Image
+                  source={require('../Image/logoapp.png')}
+                  style={{
+                    width : '50%',
+                    height : 100,
+                    resizeMode: 'contain',
+                    marginTop : -30,
+                  }}
+                />
+                </ImageBackground>
+            </View>
+        <View style={styles.switchTabsView}>
+          <TouchableOpacity
+            style={{
+              borderBottomWidth: activeTab === 'Loginpatient' ? 4 : 0,
+              borderBottomColor: '#495D7D',
+              paddingHorizontal: 4,
+              marginRight: 14,
+            }}
+            onPress={() => switchTab()}
+          >
+            <Text style={styles.switchText}>Patient</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              borderBottomWidth: activeTab === 'Loginmedecine' ? 4 : 0,
+              borderBottomColor: '#495D7D',
+              paddingHorizontal: 4,
+              marginRight: 14,
+            }}
+            onPress={() => switchTab()}
+          >
+            <Text style={styles.switchText}>Medecine</Text>
+          </TouchableOpacity>
+        </View>
+        {activeTab === 'Loginpatient' ? <Loginpatient /> : <Loginmedecine />}
+      </View>
+    </TouchableWithoutFeedback>
+  );
+}
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+
+  },
+
+  switchTabsView: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop : 60,
+    color: '#000',
+    justifyContent:'center',
+    alignContent:'center'
+  },
+  switchText: {
+    padding: 2,
+    fontSize: 20,
+    color: '#495D7D',
+  },
+  inputView: {
+    height: 40,
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+    marginTop: 10,
+    marginHorizontal: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  input: {
+    flex: 1,
+    height: 40,
+    fontSize: 16,
+    fontFamily: 'NSLight',
+    paddingHorizontal: 4,
+    color: '#fff',
+  },
+  button: {
+    marginHorizontal: 20,
+    backgroundColor: '#fafafa',
+    marginTop: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  buttonText: { fontFamily: 'NSRegular', fontSize: 16, color: '#E44D26' },
+  forgotPasswordText: {
+    marginHorizontal: 20,
+    marginTop: 20,
+    alignSelf: 'flex-end',
+    color: '#fff',
+    fontSize: 18,
+    fontFamily: 'NSBold',
+  },
+  socialLoginView: {
+    marginTop: 40,
+    marginHorizontal: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  socialLoginTouchable: {
+    backgroundColor: '#fff',
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 8,
+  },
   mainBody: {
     flex: 1,
-    justifyContent: 'center',
     backgroundColor: '#ffffff',
-    alignContent: 'center',
+  },
+  header: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+},
+  imageBackground:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+    width:400,
+    height:210
+    
   },
   SectionStyle: {
     flexDirection: 'row',
@@ -170,7 +424,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   buttonStyle: {
-    backgroundColor: '#7097ab',
+    backgroundColor: '#637FA8',
     borderWidth : 0,
     color: '#FFFFFF',
     borderColor: '#7DE24E',
@@ -196,7 +450,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderColor: '#dadae8',
   },
-  registerTextStyle: {
+ TextStyle: {
     color: '#000000',
     textAlign: 'center',
     alignSelf: 'center',

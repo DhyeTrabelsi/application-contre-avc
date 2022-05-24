@@ -7,7 +7,7 @@ import {View, Text, SafeAreaView,StyleSheet,Image} from 'react-native';
 
 const MedecineScreen = () => {
   return (
-    <SafeAreaView style={{flex: 1,   backgroundColor: '#FDF6F0',}}>
+    <SafeAreaView style={{flex: 1,   backgroundColor: '#ffffff',}}>
       <View style={styles.container}>
         <Text style={{ marginTop : 10, marginLeft :20 , fontWeight: 'bold', color:'#455156', fontSize: 20 }}>Votre medecine</Text>
         <View style={{

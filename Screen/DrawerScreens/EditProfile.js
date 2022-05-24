@@ -22,13 +22,13 @@ const EditProfile = () => {
     <View style={styles.container}>
     
         <View style={{alignItems: 'center'}}>
-          <Text style={{marginBottom : 25, fontSize: 18, fontWeight: 'bold'}}>
-            John Doe
+          <Text style={{marginBottom : 25, fontSize: 18, fontWeight: 'bold' ,color:'#495D7D'}}>
+            Flen ben foulen
           </Text>
         </View>
 
         <View style={styles.action}>
-          <FontAwesome name="user-o" color='#000000' size={20} />
+          <FontAwesome name="user-o" color='#495D7D' size={20} />
           <TextInput
             placeholder="First Name"
             placeholderTextColor="#666666"
@@ -42,7 +42,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={styles.action}>
-          <FontAwesome name="user-o" color='#000000' size={20} />
+          <FontAwesome name="user-o" color='#495D7D' size={20} />
           <TextInput
             placeholder="Last Name"
             placeholderTextColor="#666666"
@@ -56,7 +56,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={styles.action}>
-          <Feather name="phone" color='#000000' size={20} />
+          <Feather name="phone" color='#495D7D' size={20} />
           <TextInput
             placeholder="Phone"
             placeholderTextColor="#666666"
@@ -71,7 +71,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={styles.action}>
-          <FontAwesome name="envelope-o" color='#000000' size={20} />
+          <FontAwesome name="envelope-o" color='#495D7D' size={20} />
           <TextInput
             placeholder="Email"
             placeholderTextColor="#666666"
@@ -86,7 +86,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={styles.action}>
-          <FontAwesome name="globe" color='#000000' size={20} />
+          <FontAwesome name="globe" color='#495D7D' size={20} />
           <TextInput
             placeholder="Country"
             placeholderTextColor="#666666"
@@ -100,7 +100,7 @@ const EditProfile = () => {
           />
         </View>
         <View style={styles.action}>
-          <Icon name="account-supervisor-circle" color='#000000' size={20} />
+          <Icon name="account-supervisor-circle" color='#495D7D' size={20} />
           <TextInput
             placeholder="Statut social"
             placeholderTextColor="#666666"
@@ -125,23 +125,23 @@ export default EditProfile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FDF6F0',
-    justifyContent:'center'
+    backgroundColor: '#ffffff',
+    paddingTop: 80
   },
   commandButton: {
     padding: 15,
     borderRadius: 25,
     marginHorizontal:100,
-    backgroundColor: '#9E7777',
+    backgroundColor: '#495D7D',
     alignItems: 'center',
-    marginTop : 10,
+    marginTop : 40,
   },
   
 
   panelButtonTitle: {
     fontSize: 17,
     fontWeight: '500',
-    color: '#FDF6F0',
+    color: '#E8F9FD',
   },
   action: {
     flexDirection: 'row',
