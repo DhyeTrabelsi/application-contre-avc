@@ -12,12 +12,13 @@ import AsyncStorage from '@react-native-community/async-storage';
 import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import MedDrawerNavigationRoutes from './Screen/MedDrawerNavigationRoutes';
+
 import OnboardingScreen from './Screen/OnboardingScreen';
  
 const Stack = createStackNavigator();
  
 const Auth = () => {
-  // Stack Navigator for Login and Sign up Screen
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
       <Stack.Screen
@@ -29,7 +30,7 @@ const Auth = () => {
     </Stack.Navigator>
   );
 };
- 
+
 const App = () => {
   const [isAppFirstLaunched, setIsAppFirstLaunched] = React.useState(null);
 
@@ -61,16 +62,24 @@ const App = () => {
           // Hiding header for Splash Screen
           options={{headerShown: false}}
         />
-        {/* Auth Navigator: Include Login and Signup */}
+
         <Stack.Screen
           name="Auth"
           component={Auth}
           options={{headerShown: false}}
         />
+
+       
         {/* Navigation Drawer as a landing page */}
         <Stack.Screen
           name="DrawerNavigationRoutes"
           component={DrawerNavigationRoutes}
+          // Hiding header for Navigation Drawer
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MedDrawerNavigationRoutes"
+          component={MedDrawerNavigationRoutes}
           // Hiding header for Navigation Drawer
           options={{headerShown: false}}
         />

@@ -13,16 +13,14 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
-import Loader from './Components/Loader';
+import Loader from './Sessionpat/Components/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
 export default function LoginScreen({navigation}) {
-  const loginsuccesspatient = () => { navigation.replace('DrawerNavigationRoutes');
-  }
-  const loginsuccessmedecine = () => { navigation.replace('DrawerNavigationRoutes');
-}
-
+  const ipconfig ="192.168.1.59"
+  const loginsuccesspatient = () => { navigation.replace('DrawerNavigationRoutes');}
+  const loginsuccessmedecine = () => { navigation.replace('MedDrawerNavigationRoutes');}
   const [activeTab, setActiveTab] = useState('Loginpatient');
 
   useEffect(function () {
@@ -50,34 +48,55 @@ export default function LoginScreen({navigation}) {
       }
       setLoading(true);
       const LoginJson = { "username": String(user), "password":String(userPassword)};
-  
       axios({
         headers: { 'Content-Type': 'application/json'},
         method: 'post',
-        url:'http://192.168.1.124:8000/api/login/patient/',
+        url:'http://'+ipconfig+':8000/api/login/patient/',
         data: LoginJson,
       }).then(response=>{
-        AsyncStorage.setItem('user_id', user);
-        console.log(AsyncStorage.getItem('user_id'));
+
+        AsyncStorage.setItem('Patientuser', user);
+        AsyncStorage.setItem('Patientbirthday', response.data.data.birthday);
+        AsyncStorage.setItem('Patientbmi', String(response.data.data.bmi));
+        AsyncStorage.setItem('Patientemail', String(response.data.data.email));
+        AsyncStorage.setItem('Patientlastname', String(response.data.data.lastname));
+        AsyncStorage.setItem('Patientmedecine', String(response.data.data.medecine));
+        AsyncStorage.setItem('Patienttelephone',String( response.data.data.telephone));
+        AsyncStorage.setItem('Patientpostion', String(response.data.data.postion));
+        AsyncStorage.setItem('Patientgender', String(response.data.data.gender));
+        AsyncStorage.setItem('Patientfirstname', String(response.data.data.firstname));
+        AsyncStorage.setItem('Patientpoids', String(response.data.data.poids));
+
+        AsyncStorage.setItem('Patientsmoking_status',String( response.data.data.smoking_status));
+        AsyncStorage.setItem('Patientever_married',String( response.data.data.ever_married));
+        AsyncStorage.setItem('Patientavg_glucose_level', String(response.data.data.avg_glucose_level));
+        AsyncStorage.setItem('type_de_travail', String( response.data.data.type_de_travail));
+        AsyncStorage.setItem('heart_disease', String( response.data.data.heart_disease));
+        AsyncStorage.setItem('hypertension', String( response.data.data.hypertension));
+
+        AsyncStorage.setItem('Patientstroke', String(response.data.data.stroke));
         loginsuccesspatient();
           })
           .catch((error) => {
-          console.log(error)
+          if(error.response.data !== undefined){
 
           if(error.response.data.detail === 'User not found!'){
-            console.log(error)
             setLoading(false);
-
             alert("il n'y a pas de compte patient avec ce nom...");
-
             }
             if(error.response.data.detail ===  'Incorrect password!'){
               setLoading(false);
-
               alert("Mot de passe du compte patient incorrect avec ce nom...");
   
-            }
-        })
+            }}
+            else {
+              setTimeout(() => {
+                setLoading(false);
+              alert("Erreur de connexion...");
+
+               }, 1000);
+         
+        }})
   }
     const [user, setUser] = useState('');
     const [userPassword, setUserPassword] = useState('');
@@ -91,7 +110,7 @@ export default function LoginScreen({navigation}) {
           keyboardShouldPersistTaps="handled"
           contentContainerStyle={{
             flex: 1,
-            marginTop: 50
+            marginTop : 50
           }}>
           <View>
             <KeyboardAvoidingView enabled>
@@ -172,28 +191,38 @@ export default function LoginScreen({navigation}) {
       axios({
         headers: { 'Content-Type': 'application/json'},
         method: 'post',
-        url:'http:/192.168.1.124:8000/api/login/medecine/',
+        url:'http://'+ipconfig+':8000/api/login/medecine/',
         data: LoginJson,
       }).then(response=>{
-        AsyncStorage.setItem('user_id', usermedecine);
-        console.log(AsyncStorage.getItem('user_id'));
+        AsyncStorage.setItem('Medecineuser', usermedecine);
+        AsyncStorage.setItem('Medecineemail', String(response.data.data.email));
+        AsyncStorage.setItem('Medecinelastname', String(response.data.data.last_name));
+        AsyncStorage.setItem('Medecinetelephone',String( response.data.data.telephone));
+        AsyncStorage.setItem('Medecinepostion', String(response.data.data.postion));
+        AsyncStorage.setItem('Medecinefirstname', String(response.data.data.first_name));
+
         loginsuccessmedecine();
           })
           .catch((error) => {
-          console.log(error)
-          setLoading(false);
-
-          if(error.response.data.detail === 'User not found!'){
-            console.log(error)
-            alert("il n'y a pas de compte medecine avec ce nom...");
-}
-            
-            if(error.response.data.detail ===  'Incorrect password!'){
-              alert("Mot de passe du compte medecine incorrect avec ce nom...");
-              setLoading(false);
+            if(error.response.data !== undefined){
   
-            }
-        })
+            if(error.response.data.detail === 'User not found!'){
+              setLoading(false);
+              alert("il n'y a pas de compte medecine avec ce nom...");
+              }
+              if(error.response.data.detail ===  'Incorrect password!'){
+                setLoading(false);
+                alert("Mot de passe du compte medecine incorrect avec ce nom...");
+    
+              }}
+              else {
+                setTimeout(() => {
+                  setLoading(false);
+                alert("Erreur de connexion...");
+  
+                 }, 1000);
+           
+          }})
   } 
   const [usermedecine, setUsermedecine] = useState('');
   const [userPasswordmedecine, setUserPasswordmedecine] = useState('');
@@ -207,7 +236,7 @@ export default function LoginScreen({navigation}) {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{
           flex: 1,
-          marginTop: 50
+          marginTop : 50
         }}>
         <View>
           <KeyboardAvoidingView enabled>
@@ -293,10 +322,10 @@ export default function LoginScreen({navigation}) {
         <View style={styles.switchTabsView}>
           <TouchableOpacity
             style={{
-              borderBottomWidth: activeTab === 'Loginpatient' ? 4 : 0,
+              borderBottomWidth : activeTab === 'Loginpatient' ? 4 : 0,
               borderBottomColor: '#495D7D',
               paddingHorizontal: 4,
-              marginRight: 14,
+              marginRight : 14,
             }}
             onPress={() => switchTab()}
           >
@@ -304,14 +333,14 @@ export default function LoginScreen({navigation}) {
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              borderBottomWidth: activeTab === 'Loginmedecine' ? 4 : 0,
+              borderBottomWidth : activeTab === 'Loginmedecine' ? 4 : 0,
               borderBottomColor: '#495D7D',
               paddingHorizontal: 4,
-              marginRight: 14,
+              marginRight : 14,
             }}
             onPress={() => switchTab()}
           >
-            <Text style={styles.switchText}>Medecine</Text>
+            <Text style={styles.switchText}>Médecin</Text>
           </TouchableOpacity>
         </View>
         {activeTab === 'Loginpatient' ? <Loginpatient /> : <Loginmedecine />}
@@ -341,10 +370,10 @@ const styles = StyleSheet.create({
     color: '#495D7D',
   },
   inputView: {
-    height: 40,
-    borderBottomWidth: 1,
+    height : 40,
+    borderBottomWidth : 1,
     borderBottomColor: '#000',
-    marginTop: 10,
+    marginTop : 10,
     marginHorizontal: 20,
     display: 'flex',
     flexDirection: 'row',
@@ -352,7 +381,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    height : 40,
     fontSize: 16,
     fontFamily: 'NSLight',
     paddingHorizontal: 4,
@@ -361,13 +390,13 @@ const styles = StyleSheet.create({
   button: {
     marginHorizontal: 20,
     backgroundColor: '#fafafa',
-    marginTop: 12,
+    marginTop : 12,
     paddingVertical: 10,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: 2,
+      width : 0,
+      height : 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
@@ -376,14 +405,14 @@ const styles = StyleSheet.create({
   buttonText: { fontFamily: 'NSRegular', fontSize: 16, color: '#E44D26' },
   forgotPasswordText: {
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop : 20,
     alignSelf: 'flex-end',
     color: '#fff',
     fontSize: 18,
     fontFamily: 'NSBold',
   },
   socialLoginView: {
-    marginTop: 40,
+    marginTop : 40,
     marginHorizontal: 20,
     display: 'flex',
     flexDirection: 'row',
@@ -391,8 +420,8 @@ const styles = StyleSheet.create({
   },
   socialLoginTouchable: {
     backgroundColor: '#fff',
-    width: 40,
-    height: 40,
+    width : 40,
+    height : 40,
     borderRadius: 100,
     alignItems: 'center',
     justifyContent: 'center',
@@ -411,8 +440,8 @@ const styles = StyleSheet.create({
     flex:1,
     justifyContent:'center',
     alignItems:'center',
-    width:400,
-    height:210
+    width :400,
+    height :210
     
   },
   SectionStyle: {

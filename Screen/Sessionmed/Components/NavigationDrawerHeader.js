@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const NavigationDrawerHeader = (props) => {
   const toggleDrawer = () => {
     props.navigationProps.toggleDrawer();
+
   };
 
   return (

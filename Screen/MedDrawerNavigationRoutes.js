@@ -1,33 +1,54 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
 
-// Import React
 import React from 'react';
 
-// Import Navigators from React Navigation
 import {createStackNavigator} from '@react-navigation/stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-// Import Screens
-import MedecineScreen from './Sessionpat/DrawerScreens/MedecineScreen';
-import EditProfile from './Sessionpat/DrawerScreens/EditProfile';
-import ProfileScreen from './Sessionpat/DrawerScreens/ProfileScreen';
-import CustomSidebarMenu from './Sessionpat/Components/CustomSidebarMenu';
-import NavigationDrawerHeader from './Sessionpat/Components/NavigationDrawerHeader';
+import PatientScreen from './Sessionmed/DrawerScreens/PatientScreen';
+import EditProfile from './Sessionmed/DrawerScreens/EditProfile';
+import ProfileScreen from './Sessionmed/DrawerScreens/ProfileScreen';
+import DemandesScreen from './Sessionmed/DrawerScreens/DemandesScreen';
+import CustomSidebarMenu from './Sessionmed/Components/CustomSidebarMenu';
+import NavigationDrawerHeader from './Sessionmed/Components/NavigationDrawerHeader';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const profilestack = createStackNavigator();
 
-const MedecineScreenStack = ({navigation}) => {
+const PatientScreenStack = ({navigation}) => {
   return (
-    <Stack.Navigator initialRouteName="MedecineScreen">
+    <Stack.Navigator initialRouteName="PatientScreen">
       <Stack.Screen
-        name="MedecineScreen"
-        component={MedecineScreen}
+        name="PatientScreen"
+        component={PatientScreen}
         options={{
-          title: 'Medecine', //Set Header Title
+          title: 'Patients', //Set Header Title
+          headerLeft : () => (
+            <NavigationDrawerHeader navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#E8F9FD', //Set Header color
+          },
+          headerTintColor: '#495D7D', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+       
+    </Stack.Navigator>
+  );
+};
+
+const DemandesScreenStack = ({navigation}) => {
+  return (
+    <Stack.Navigator initialRouteName="DemandesScreen">
+      <Stack.Screen
+        name="Demandes"
+        component={DemandesScreen}
+        options={{
+          title: 'Demandes', //Set Header Title
           headerLeft : () => (
             <NavigationDrawerHeader navigationProps={navigation} />
           ),
@@ -120,10 +141,15 @@ const DrawerNavigatorRoutes = (props) => {
         component={ProfileScreenStack}
       />
       <Drawer.Screen
-        name="MedecineScreenStack"
-        options={{drawerLabel: 'Medecine'}}
-        component={MedecineScreenStack}
+        name="PatientScreenStack"
+        options={{drawerLabel: 'Patient'}}
+        component={PatientScreenStack}
         
+      />
+      <Drawer.Screen
+        name="DemandesScreenStack"
+        options={{drawerLabel: 'Demandes'}}
+        component={DemandesScreenStack}
       />
     </Drawer.Navigator>
   );

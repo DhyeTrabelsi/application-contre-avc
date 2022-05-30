@@ -2,7 +2,7 @@
 // https://aboutreact.com/react-native-login-and-signup/
 
 // Import React and Component
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import {View, Text, Alert, StyleSheet,  ImageBackground,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
@@ -16,16 +16,20 @@ import {
 import AsyncStorage from '@react-native-community/async-storage';
 
 const CustomSidebarMenu = (props) => {
+  const [user, setUser] = useState('');
+  useEffect(() => {
+  AsyncStorage.getItem('Patientuser').then((value) =>setUser(value))
+  });
   return (
     <LinearGradient start={{x: 0, y: 0}} end={{x: 1, y: 0}} colors={['#ffffff', '#ffffff']}  style={stylesSidebar.sideMenuContainer} >
-      <ImageBackground style={stylesSidebar.profileHeader}  source={require("../../Image/headerdrawer.png")}>
+      <ImageBackground style={stylesSidebar.profileHeader}  source={require("../../../Image/headerdrawer.png")}>
      
         <View style={stylesSidebar.profileHeaderPicCircle}>
           <Text style={{fontSize: 25, color: '#495D7D'}}>
-            {'Flen ben foulen'.charAt(0)}
+            {user.toUpperCase().charAt(0)}
           </Text>
         </View>
-        <Text style={stylesSidebar.profileHeaderText}>Flen ben foulen</Text>
+        <Text style={stylesSidebar.profileHeaderText}>{user}</Text>
       </ImageBackground>
 
       <DrawerContentScrollView {...props}>
@@ -37,8 +41,8 @@ const CustomSidebarMenu = (props) => {
           onPress={() => {
             props.navigation.toggleDrawer();
             Alert.alert(
-              'Logout',
-              'Are you sure? You want to logout?',
+              'Dèconnexion',
+              'Vous étes sure?',
               [
                 {
                   text: 'Cancel',
@@ -47,7 +51,7 @@ const CustomSidebarMenu = (props) => {
                   },
                 },
                 {
-                  text: 'Confirm',
+                  text: 'Confirme',
                   onPress: () => {
                     AsyncStorage.clear();
                     props.navigation.replace('Auth');
@@ -79,7 +83,7 @@ const stylesSidebar = StyleSheet.create({
   },
 
   profileHeaderPicCircle: {
-    marginTop:20,
+    marginTop :20,
     width : 60,
     height : 60,
     borderRadius: 60 / 2,
@@ -89,7 +93,7 @@ const stylesSidebar = StyleSheet.create({
     alignItems: 'center',
   },
   profileHeaderText: {
-    marginTop:-20,
+    marginTop :-20,
     color: '#495D7D',
     alignSelf: 'center',
     paddingHorizontal: 10,
