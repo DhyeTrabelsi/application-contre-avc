@@ -1,13 +1,12 @@
 import React,{useState,useEffect} from 'react';
-import {ScrollView,View, Text, SafeAreaView,StyleSheet,Image,  TouchableOpacity} from 'react-native';
+import {ScrollView,View, Text, SafeAreaView,StyleSheet,Image,  TouchableOpacity,Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-const ipconfig='192.168.1.115'
+import Loader from '../Components/Loader';
 
+import { ipconfig } from '../../Ipconfig';
 const MedecineScreen = () => {
-
-    const [users,setusers] = useState([]);
-
+const [users,setusers] = useState([]);
 const Profilmed = () =>(
     
 <SafeAreaView style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
@@ -32,16 +31,20 @@ const Profilmed = () =>(
           <Image style={{ marginBottom : 10 }} />
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Medecine</Text>
-              <Text style={styles.content}>Flen ben foulen</Text>
+              <Text style={styles.content}>{first_name} {last_name}</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Email</Text>
-              <Text style={styles.content}>Flenbenfoulen@gmail.com</Text>
+              <Text style={styles.content}>{email}</Text>
           </View>
 
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Location</Text>
-              <Text style={styles.content}>Sfax, bla bla</Text>
+              <Text style={styles.content}>{postion}</Text>
+          </View> 
+           <View style={{ flexDirection: 'row', marginTop : 5 }}>
+              <Text style={styles.prefix}>Telephone</Text>
+              <Text style={styles.content}>{telephone}</Text>
           </View>
 
       </View>
@@ -49,6 +52,8 @@ const Profilmed = () =>(
 </SafeAreaView>)
 const Demmandemed = () =>(
     <ScrollView>
+      <Loader loading={loading} />
+
     {users.map((user) => (
 
     <SafeAreaView key={user.username} style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
@@ -86,7 +91,27 @@ const Demmandemed = () =>(
               <Text style={styles.prefix}>Telephone</Text>
               <Text style={styles.content}>{user.telephone}</Text>
           </View>
-          <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
+          <TouchableOpacity style={styles.commandButton} onPress={() => {
+             Alert.alert(
+              'Envoyer demande',
+              "Vous étes sure d'envoyer une demande à "+user.username,
+              [
+                {
+                  text: 'Annuler',
+                  onPress: () => {
+                    return null;
+                  },
+                },
+                {
+                  text: 'Confirmer',
+                  onPress: () => {
+                    Demande(user.username);
+                  },
+                },
+              ],
+              {cancelable: false},
+            );
+            }}>
           <Text style={styles.panelButtonTitle}>Demander</Text>
         </TouchableOpacity>
           </View>
@@ -95,6 +120,11 @@ const Demmandemed = () =>(
     </ScrollView>);
 const [isLoading, setIsLoading] = useState(true);
 const [med, setmed] = useState('');
+const [first_name, setfirst_name] = useState('');
+const [last_name, setlast_name] = useState('');
+const [telephone, settelephone] = useState('');
+const [email, setemail] = useState('');
+const [postion, setpostion] = useState('');
 const getdatamed = () => {
    
 
@@ -105,29 +135,66 @@ const getdatamed = () => {
     }).then(response=>{
       var n=0;
       if(med === 'null'){
-       setusers(response.data)}
-       console.log("aa")
-      })}
+       setusers(response.data)}  
+       else{
+        while (n < response.data.length ) {
+          if(String(response.data[n].username)===String(med)){
+        setfirst_name(String( response.data[n].first_name))
+        setlast_name(String( response.data[n].last_name))
+        setemail(String( response.data[n].email))
+        setpostion( String(response.data[n].postion))
+        settelephone(String( response.data[n].telephone))
+            break;
+          }n++;
+        }}})
+        .catch((error) => {
+          alert("Erreur de connexion..");
+         })
+    }
   
 useEffect(() => {
+  let unmounted =false
+  const interval = setInterval(() => {
+
+if(!unmounted){
     getdatamed();
     AsyncStorage.getItem('Patientmedecine').then((value) =>setmed(value));
-    if(med === 'null'){setIsLoading(false)
-    console.log(med)}
-    else{setIsLoading(true);  console.log("fff")}
+    AsyncStorage.getItem('Patientuser').then((value) =>setUser(value));
+    if(med === 'null'){setIsLoading(false)}
+    else{setIsLoading(true);}}},1000);
+    return () => {
+      clearInterval(interval);
+      unmounted=true;
+    };
 })
-  return (
-    <ScrollView
-    style={{    backgroundColor: '#ffffff',
-  }}
-    showsVerticalScrollIndicator={false}
-  >
 
-<ScrollView>
-          {isLoading ? <Profilmed/> : <Demmandemed/>}
-       </ScrollView>
-           
-    
+const [loading, setLoading] = useState(false);
+const [user, setUser] = useState('');
+const Demande = (medecine) => {
+  const DemandeJson = { "patient": String(user), "medecine":String(medecine),"resultat":"true"};
+  console.log(DemandeJson)
+ 
+          axios({
+            headers: { 'Content-Type': 'application/json'},
+            method: 'post',
+            url:'http://'+ipconfig+':8000/demande/',
+            data: DemandeJson,
+          }).then(response=>{
+            console.log(response)
+            if(response.data.message === "Demmande created successfully"){
+              alert('Demande envoyé avec succès..');
+            }  })
+          
+            .catch((error) => {
+           alert("Erreur d'envoyer la demande..");
+          }) 
+}
+  return (
+  <ScrollView
+     style={{backgroundColor: '#ffffff'}}showsVerticalScrollIndicator={false}>
+    <ScrollView>
+    {isLoading ? <Profilmed/> : <Demmandemed/>}
+    </ScrollView>
   </ScrollView>
   );
 };

@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react';
 import {ScrollView,View, Text, SafeAreaView,StyleSheet,ActivityIndicator,  TouchableOpacity} from 'react-native';
 import axios from 'axios';
-const ipconfig='192.168.1.59'
+import { ipconfig } from '../../Ipconfig';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const PatientScreen = () => {
@@ -99,9 +99,10 @@ async function getdatapatient  ()  {
       method: 'get',
       url:'http://'+ipconfig+':8000/api/patient/listmed/'+String(user)+'/',
     }).then(response=>{
-        setpatients(response.data);  
-}
-    )}}
+        setpatients(response.data); })
+    .catch((error) => {
+        alert("Erreur de connexion..");
+       })}}
     
 const [isLoading, setIsLoading] = useState(true);
  

@@ -1,18 +1,13 @@
 
 import React,{useState,useEffect}from 'react';
-import {View, Text, Alert, StyleSheet,  ImageBackground,
-} from 'react-native';
+import {View, Text, Alert, StyleSheet,  ImageBackground,} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
+import {DrawerContentScrollView,DrawerItemList,DrawerItem,} from '@react-navigation/drawer';
+import { ipconfig } from '../../Ipconfig';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const CustomSidebarMenu = (props) => {
   var n =0;
-  const ipconfig='192.168.1.59'
   const [user, setUser] = useState('');
     useEffect(() => {
         getdata();
@@ -40,17 +35,17 @@ const CustomSidebarMenu = (props) => {
           onPress={() => {
             props.navigation.toggleDrawer();
             Alert.alert(
-              'Logout',
-              'Are you sure? You want to logout?',
+              'Déconnexion',
+              'Êtes-vous sûr? Vous voulez vous déconnecter ?',
               [
                 {
-                  text: 'Cancel',
+                  text: 'Annuler',
                   onPress: () => {
                     return null;
                   },
                 },
                 {
-                  text: 'Confirm',
+                  text: 'Confirmer',
                   onPress: () => {
                     AsyncStorage.clear();
                     props.navigation.replace('Auth');

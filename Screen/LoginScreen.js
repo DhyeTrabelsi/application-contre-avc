@@ -1,24 +1,10 @@
 import React, { useState, useEffect , createRef} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  StatusBar,
-  TextInput,
-  ImageBackground,
-  Image,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {StyleSheet,Text,View,ScrollView,StatusBar,TextInput,ImageBackground,Image,TouchableOpacity,TouchableWithoutFeedback,Keyboard,KeyboardAvoidingView} from 'react-native';
 import Loader from './Sessionpat/Components/Loader';
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { ipconfig } from './Ipconfig';
 export default function LoginScreen({navigation}) {
-  const ipconfig ="192.168.1.59"
   const loginsuccesspatient = () => { navigation.replace('DrawerNavigationRoutes');}
   const loginsuccessmedecine = () => { navigation.replace('MedDrawerNavigationRoutes');}
   const [activeTab, setActiveTab] = useState('Loginpatient');

@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 import {createStackNavigator} from '@react-navigation/stack';
@@ -96,7 +95,7 @@ const ProfileScreenStack = ({navigation}) => {
             onPress={() => navigation.navigate('EditProfile')}
             style={{ marginRight :15}}
           />
-          ), //Set Header Title
+          ),
         }}
       />
       <profilestack.Screen

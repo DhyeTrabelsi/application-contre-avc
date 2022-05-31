@@ -1,14 +1,12 @@
 import React,{useState,useEffect}from 'react';
-import {ActivityIndicator,View, SafeAreaView, StyleSheet,  ScrollView,
-} from 'react-native';
+import {View, SafeAreaView, StyleSheet,  ScrollView} from 'react-native';
 import {Title,Caption,Text} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import {Placeholder,PlaceholderMedia,PlaceholderLine,Fade} from 'rn-placeholder';
-
+import { ipconfig } from '../../Ipconfig';
 var n =0;
-const ipconfig='192.168.1.59'
 const ProfileScreen = () => {
 
   const [firstnamenouvelle, setfirstnamenouvelle] = useState('');
@@ -70,7 +68,11 @@ const ProfileScreen = () => {
       setemailnouvelle(String( response.data[n].email))
       break;}
         n++;
-      }})}}
+      }})
+      .catch((error) => {
+        alert("Erreur de connexion..");
+       })
+    }}
   
   
   const Profil = () =>(
@@ -93,7 +95,7 @@ const ProfileScreen = () => {
       </View>
     </View>
 
-    <View style={styles.userInfoSection}>
+    <View style={[styles.userInfoSection,{marginTop : 30}]}>
       <View style={styles.row}>
         <Icon name="map-marker-radius" color="#495D7D" size={25}/>
         <Text style={{color:"#000000", marginLeft : 25,marginTop :5}}>{postion}</Text>
@@ -124,14 +126,17 @@ const LoadingCard = () => (
       </View>
     </View>
 
-    <View style={[styles.userInfoSection]}>
+    <View style={[styles.userInfoSection,{marginTop : 50}]}>
       <View style={styles.row}>
+      <PlaceholderLine width={5} />
       <PlaceholderLine width={50} style={{marginLeft : 15}} />
       </View>
       <View style={styles.row}>
-        <PlaceholderLine width={50} style={{marginLeft : 15}} />
+      <PlaceholderLine width={5} />
+      <PlaceholderLine width={50} style={{marginLeft : 15}} />
       </View>
       <View style={styles.row}>
+      <PlaceholderLine width={5} />
       <PlaceholderLine width={50} style={{marginLeft : 15}} />
       </View>
     </View>
@@ -178,7 +183,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#ffffff',
-  },
+marginVertical: 50  },
   userInfoSection: {
     paddingHorizontal: 30,
     marginBottom : 25,

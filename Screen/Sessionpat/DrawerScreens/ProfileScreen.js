@@ -1,25 +1,13 @@
 import React,{useState,useEffect}from 'react';
-import {ActivityIndicator,View, SafeAreaView, StyleSheet,  ScrollView,
-} from 'react-native';
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-} from 'react-native-paper';
+import {View, SafeAreaView, StyleSheet,  ScrollView,} from 'react-native';
+import {Title, Caption,Text,} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-
-import {
-  Placeholder,
-  PlaceholderMedia,
-  PlaceholderLine,
-  Fade,
-} from 'rn-placeholder';
+import { ipconfig } from '../../Ipconfig';
+import {Placeholder,PlaceholderMedia,PlaceholderLine,Fade} from 'rn-placeholder';
 
 var n =0;
-const ipconfig='192.168.1.17'
 const ProfileScreen = () => {
   const [firstnamenouvelle, setfirstnamenouvelle] = useState('');
   const [lastnamenouvelle, setlastnamenouvelle] = useState('');
@@ -61,7 +49,10 @@ const ProfileScreen = () => {
   var today = new Date();
    
   useEffect(() => {
+    let unmounted =false
+
     const interval = setInterval(() => {
+      if (!unmounted){ 
       getdata();
       if (firstnamenouvelle!==firstname || lastname!==lastnamenouvelle || telephone!==telephonenouvelle || email!==emailnouvelle || poids!==poidsnouvelle
       || bmi !== bminouvelle || gender!==gendernouvelle || avg_glucose_level!==avg_glucose_levelnouvelle || ever_married!==ever_marriednouvelle || smoking_status!==smoking_statusnouvelle 
@@ -105,11 +96,12 @@ const ProfileScreen = () => {
       AsyncStorage.setItem('type_de_travail', String(type_de_travailnouvelle));
       setIsLoading(false)
 
-     }
+     }}
     }, 1000);
 
     return () => {
       clearInterval(interval);
+      unmounted=true;
     };
   });
   const getdata = () => {
@@ -143,7 +135,11 @@ const ProfileScreen = () => {
       ) 
           break;}
         n++;
-      } })}}
+      } })
+      .catch((error) => {
+        alert("Erreur de connexion..");
+       })
+    }}
   
   
   const Profil = () =>(

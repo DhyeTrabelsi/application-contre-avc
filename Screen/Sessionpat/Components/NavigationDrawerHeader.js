@@ -1,12 +1,8 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
 
-// Import React and Component
 import React from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import AsyncStorage from '@react-native-community/async-storage';
-
+import { ipconfig } from '../../Ipconfig';
 const NavigationDrawerHeader = (props) => {
   
   const toggleDrawer = () => {

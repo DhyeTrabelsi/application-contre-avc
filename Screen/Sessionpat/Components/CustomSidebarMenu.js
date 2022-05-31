@@ -1,18 +1,8 @@
-// Example of Splash, Login and Sign Up in React Native
-// https://aboutreact.com/react-native-login-and-signup/
 
-// Import React and Component
 import React,{useState,useEffect} from 'react';
-import {View, Text, Alert, StyleSheet,  ImageBackground,
-} from 'react-native';
+import {View, Text, Alert, StyleSheet,  ImageBackground} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient'
-
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-
+import {DrawerContentScrollView,DrawerItemList,DrawerItem,} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const CustomSidebarMenu = (props) => {
@@ -42,16 +32,16 @@ const CustomSidebarMenu = (props) => {
             props.navigation.toggleDrawer();
             Alert.alert(
               'Dèconnexion',
-              'Vous étes sure?',
+              'Êtes-vous sûr? Vous voulez vous déconnecter ?',
               [
                 {
-                  text: 'Cancel',
+                  text: 'Annuler',
                   onPress: () => {
                     return null;
                   },
                 },
                 {
-                  text: 'Confirme',
+                  text: 'Confirmer',
                   onPress: () => {
                     AsyncStorage.clear();
                     props.navigation.replace('Auth');

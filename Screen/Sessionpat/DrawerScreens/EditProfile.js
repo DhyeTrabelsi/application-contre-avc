@@ -1,20 +1,12 @@
 import React ,{useState,useEffect,createRef} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,ToastAndroid,
-  StyleSheet,Alert,
-} from 'react-native';
+import {View,Text,TouchableOpacity,TextInput,ToastAndroid,StyleSheet,Alert} from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
-
-const ipconfig='192.168.1.115'
-
+import { ipconfig } from '../../Ipconfig';
 const EditProfile = () => {
   const [user, setUser] = useState('');
   const [firstname, setfirstname] = useState('');
@@ -24,8 +16,22 @@ const EditProfile = () => {
   const [ever_married, setever_married] = useState('');
   const [postion, setpostion] = useState('');
   const [typework, settypework] = useState('');
+  useEffect(() => {
+    if (user===''){
 
+    AsyncStorage.getItem('Patientuser').then((value) =>setUser(value));
+    AsyncStorage.getItem('Patientever_married').then((value) =>setever_married(value));
+    AsyncStorage.getItem('Patienttypework').then((value) =>settypework(value));
+    AsyncStorage.getItem('Patientemail').then((value) =>setemail(value));
+    AsyncStorage.getItem('Patientlastname').then((value) =>setlastname(value));
+    AsyncStorage.getItem('Patienttelephone').then((value) =>settelephone(value));
+    AsyncStorage.getItem('Patientpostion').then((value) =>setpostion(value));
+    AsyncStorage.getItem('Patientfirstname').then((value) =>setfirstname(value));
+
+  }
+  })
   const handleupdatepatient = () => {
+    console.log(typework);
     if (!firstname ||!lastname ||!telephone ||!email ||!ever_married ||!postion ||!typework) {
       alert("Veuillez remplir bien vos données");
       return;
@@ -33,20 +39,21 @@ const EditProfile = () => {
   
     const updateJson = { "username": String(user), "email":String(email), "firstname":String(firstname),  "telephone":String(telephone), 
     "lastname":String(lastname), "postion":String(postion), "ever_married":String(ever_married), "type_de_travail":String(typework)
-  
-  };
+
+  };    console.log(updateJson);
+
   Alert.alert(
     'Modification des données',
     'Vous étes sure ?',
     [
       {
-        text: 'Cancel',
+        text: 'Annuler',
         onPress: () => {
           return null;
         },
       },
       {
-        text: 'Confirm',
+        text: 'Confirmer',
         onPress: () => {
           axios({
             headers: { 'Content-Type': 'application/json'},
@@ -54,21 +61,16 @@ const EditProfile = () => {
             url:'http://'+ipconfig+':8000/api/update/patient/',
             data: updateJson,
           }).then(response=>{
-            ToastAndroid.show('Les données sont bien mmodifées',2000)       })
+            ToastAndroid.show('Les données sont bien modifées',2000)       })
+            .catch((error) => {
+              alert("Erreur d'enregistrer les données..");
+             })
       },},
     ],
     {cancelable: false},
-  );
-
-    
+  );  
 }
-
-  useEffect(() => {
-    console.log(firstname)
-    AsyncStorage.getItem('Patientuser').then((value) =>setUser(value));
-
-
-  });
+ ;
 
 return (
     <View style={styles.container}>
