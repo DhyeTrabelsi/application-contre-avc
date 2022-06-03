@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
 import {Placeholder,PlaceholderMedia,PlaceholderLine,Fade} from 'rn-placeholder';
-
+var erreurconnexion=0;
 var n =0;
 const ProfileScreen = () => {
   const [firstnamenouvelle, setfirstnamenouvelle] = useState('');
@@ -137,8 +137,10 @@ const ProfileScreen = () => {
         n++;
       } })
       .catch((error) => {
-        alert("Erreur de connexion..");
-       })
+        if(erreurconnexion==0){
+          alert("Erreur de connexion..");
+          erreurconnexion=1;
+        }       })
     }}
   
   

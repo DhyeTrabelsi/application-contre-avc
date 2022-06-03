@@ -3,6 +3,7 @@ import {ScrollView,View, Text, SafeAreaView,StyleSheet,ActivityIndicator,  Touch
 import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
 import AsyncStorage from '@react-native-community/async-storage';
+var erreurconnexion=0;
 
 const PatientScreen = () => {
 const [patients,setpatients] = useState([]);
@@ -101,8 +102,10 @@ async function getdatapatient  ()  {
     }).then(response=>{
         setpatients(response.data); })
     .catch((error) => {
-        alert("Erreur de connexion..");
-       })}}
+        if(erreurconnexion==0){
+            alert("Erreur de connexion..");
+            erreurconnexion=1;
+          }})}}
     
 const [isLoading, setIsLoading] = useState(true);
  

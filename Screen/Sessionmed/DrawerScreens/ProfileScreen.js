@@ -7,6 +7,8 @@ import axios from 'axios';
 import {Placeholder,PlaceholderMedia,PlaceholderLine,Fade} from 'rn-placeholder';
 import { ipconfig } from '../../Ipconfig';
 var n =0;
+var erreurconnexion=0;
+
 const ProfileScreen = () => {
 
   const [firstnamenouvelle, setfirstnamenouvelle] = useState('');
@@ -50,9 +52,9 @@ const ProfileScreen = () => {
       clearInterval(interval);
     };
   });
+
   async function getdata () {
     AsyncStorage.getItem('Medecineuser').then((value) =>setUser(value))
-  
     if(user!==''){
     axios({
       headers: { 'Content-Type': 'application/json'},
@@ -70,7 +72,10 @@ const ProfileScreen = () => {
         n++;
       }})
       .catch((error) => {
-        alert("Erreur de connexion..");
+        if(erreurconnexion==0){
+          alert("Erreur de connexion..");
+          erreurconnexion=1;
+        }
        })
     }}
   

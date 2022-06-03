@@ -4,6 +4,7 @@ import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
 import AsyncStorage from '@react-native-community/async-storage';
 import Loader from '../Components/Loader';
+var erreurconnexion=0;
 
 const DemandesScreen = () => {
 const [demandes,setdemandes] = useState([]);
@@ -154,8 +155,10 @@ async function getdemandes ()  {
       setLoading(false);
     })
     .catch((error) => {
-      alert("Erreur de connexion..");
-     })
+      if(erreurconnexion==0){
+        alert("Erreur de connexion..");
+        erreurconnexion=1;
+      }     })
   }}
 useEffect(() => {
   const interval = setInterval(() => {
