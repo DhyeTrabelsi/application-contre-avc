@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PatientScreen from './Sessionmed/DrawerScreens/PatientScreen';
 import EditProfile from './Sessionmed/DrawerScreens/EditProfile';
 import ProfileScreen from './Sessionmed/DrawerScreens/ProfileScreen';
+import HistoriquePatient from './Sessionmed/DrawerScreens/HistoriquePatient';
 import DemandesScreen from './Sessionmed/DrawerScreens/DemandesScreen';
 import CustomSidebarMenu from './Sessionmed/Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Sessionmed/Components/NavigationDrawerHeader';
@@ -35,7 +36,20 @@ const PatientScreenStack = ({navigation}) => {
           },
         }}
       />
-       
+       <Stack.Screen
+        name="HistoriquePatient"
+        options={{
+          title: 'Historique patient',
+          headerStyle: {
+            backgroundColor: '#E8F9FD', //Set Header color
+          },
+          headerTintColor: '#495D7D', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+        component={HistoriquePatient}
+      />
     </Stack.Navigator>
   );
 };

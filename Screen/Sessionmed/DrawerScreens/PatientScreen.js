@@ -1,15 +1,19 @@
 import React,{useState,useEffect} from 'react';
-import {ScrollView,View, Text, SafeAreaView,StyleSheet,ActivityIndicator,  TouchableOpacity} from 'react-native';
+import {ScrollView,View, Text, SafeAreaView,StyleSheet,ActivityIndicator,Linking,  TouchableOpacity,Alert} from 'react-native';
 import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
 import AsyncStorage from '@react-native-community/async-storage';
+import PushNotification from "react-native-push-notification";
+import ShowMore from 'react-native-show-more-button';
+
 var erreurconnexion=0;
 
-const PatientScreen = () => {
+const PatientScreen = ({navigation}) => {
+
+ 
 const [patients,setpatients] = useState([]);
 var today = new Date();
 const [user, setUser] = useState('');
-
 const Loaddata = () =>(
     
     <SafeAreaView style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
@@ -51,44 +55,47 @@ const Listpatients = () =>(
               <Text style={styles.prefix}>Location</Text>
               <Text style={styles.content}>{patient.postion}</Text>
           </View>
-          <View style={{ flexDirection: 'row', marginTop : 5 }}>
-              <Text style={styles.prefix}>Telephone</Text>
-              <Text style={styles.content}>{patient.telephone}</Text>
-          </View>
-          <View style={{ flexDirection: 'row', marginTop : 5 }}>
-              <Text style={styles.prefix}>Email</Text>
-              <Text style={styles.content}>{patient.email}</Text>
-          </View>
+         
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Age</Text>
               <Text style={styles.content}>{today.getFullYear()-parseInt(patient.birthday.slice(0,4))} Ans</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Poids</Text>
-              <Text style={styles.content}>{patient.poids} Kg</Text>
+              <Text style={styles.content}>{patient.poids[Object.keys(patient.poids)[Object.keys(patient.poids).length - 1]]} Kg</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Taux de glucose</Text>
-              <Text style={styles.content}>{patient.avg_glucose_level}</Text>
+              <Text style={styles.content}>{patient.avg_glucose_level[Object.keys(patient.avg_glucose_level)[Object.keys(patient.avg_glucose_level).length - 1]]}</Text>
+          </View>
+          <View style={{ flexDirection: 'row', marginTop : 5 }}>
+              <Text style={styles.prefix}>Hypertension</Text>
+              <Text style={styles.content}>{patient.hypertension[Object.keys(patient.hypertension)[Object.keys(patient.hypertension).length - 1]]}</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Indice de Masse Corporelle</Text>
-              <Text style={styles.content}>{patient.bmi}</Text>
+              <Text style={styles.content}>{patient.bmi[Object.keys(patient.bmi)[Object.keys(patient.bmi).length - 1]]}</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Type de travail</Text>
-              <Text style={styles.content}>Travail {patient.type_de_travail}</Text>
+              <Text style={styles.content}>{patient.type_de_travail}</Text>
           </View>
           <View style={{ flexDirection: 'row', marginTop : 5 }}>
               <Text style={styles.prefix}>Maladie cardiaque</Text>
-              <Text style={styles.content}>{patient.heart_disease == '0' ? 'Pas de maladie' : 'Maladie existe'}</Text>
+              <Text style={styles.content}>{patient.heart_disease[Object.keys(patient.heart_disease)[Object.keys(patient.heart_disease).length - 1]]}</Text>
           </View>
-          <TouchableOpacity style={styles.commandButton} onPress={() => {}}>
-          <Text style={styles.panelButtonTitle}>Envoyer un mail</Text>
+          
+          <Text style={{color:"#ff0000", marginLeft : 25,    marginVertical : 8}}>{patient.stroke == 1 ? "Vous devez contacter rapidement ce patient, notre système à détecter des signes dangerous" : ""}</Text>
+          <TouchableOpacity style={styles.commandButton} onPress={() =>{
+            navigation.push('HistoriquePatient',{"patient":{patient}});
+            
+            }}>
+          <Text style={styles.panelButtonTitle}>Consulter</Text>
         </TouchableOpacity>
           </View>
       </View>
-    </SafeAreaView>))}
+  
+    </SafeAreaView>))}   
     </ScrollView>);
 
 var n=0;
@@ -108,16 +115,57 @@ async function getdatapatient  ()  {
           }})}}
     
 const [isLoading, setIsLoading] = useState(true);
- 
+const createChannels = (patient) => {
+    PushNotification.localNotificationSchedule({
+      channelId: 'task-channel',
+      title: patient.username+ ", des signes drangrous detectées",
+      message: "Aprés la derniere mise a jour de votre dossier médicale,nous vous demandons de contacter rapidement votre patient",
+      date: new Date(Date.now()),
+
+   })
+}  
+
+
 useEffect(() => {
     const interval = setInterval(() => {
 
     getdatapatient();
     
     if (patients.length!==0){         
-         setIsLoading(false);} 
+         setIsLoading(false);
+         
+         patients.map((patient) => 
+         
+         {           
+
+
+        if((patient.notifier===0)&(patient.stroke===1)){
+             const notifierJson = { "username": String(patient.username), "notifier":1};
+             axios({
+              headers: { 'Content-Type': 'application/json'},
+              method: 'patch',
+              url:'http://'+ipconfig+':8000/api/notifier/patient/',
+              data: notifierJson,
+            }).then(response=>{ 
+              getdatapatient();
+              createChannels(patient);
+
+              })
+              .catch((error) => {
+                alert("Erreur d'enregistrer les données..");
+               })
+
+         }
+        else{
+          
+        }}
+         
+         );        } 
     else{setIsLoading(true);}
+   
+        
         }
+    
     , 1000);
 
     return () => {
@@ -154,7 +202,6 @@ const styles = StyleSheet.create({
     marginLeft :"50%",
     backgroundColor: '#495D7D',
     alignItems: 'center',
-    marginTop : 15,
   },
   
 

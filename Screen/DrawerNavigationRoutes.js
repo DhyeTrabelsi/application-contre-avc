@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MedecineScreen from './Sessionpat/DrawerScreens/MedecineScreen';
 import EditProfile from './Sessionpat/DrawerScreens/EditProfile';
 import ProfileScreen from './Sessionpat/DrawerScreens/ProfileScreen';
+import HistoriqueScreen from './Sessionpat/DrawerScreens/HistoriqueScreen';
 import CustomSidebarMenu from './Sessionpat/Components/CustomSidebarMenu';
 import NavigationDrawerHeader from './Sessionpat/Components/NavigationDrawerHeader';
 
@@ -15,6 +16,30 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const profilestack = createStackNavigator();
 
+const HistoriqueScreenStack = ({navigation}) => {
+  return (
+    <Stack.Navigator initialRouteName="HistoriqueScreen">
+      <Stack.Screen
+        name="HistoriqueScreen"
+        component={HistoriqueScreen}
+        options={{
+          title: 'Historique', //Set Header Title
+          headerLeft : () => (
+            <NavigationDrawerHeader navigationProps={navigation} />
+          ),
+          headerStyle: {
+            backgroundColor: '#E8F9FD', //Set Header color
+          },
+          headerTintColor: '#495D7D', //Set Header text color
+          headerTitleStyle: {
+            fontWeight: 'bold', //Set Header text style
+          },
+        }}
+      />
+       
+    </Stack.Navigator>
+  );
+};
 const MedecineScreenStack = ({navigation}) => {
   return (
     <Stack.Navigator initialRouteName="MedecineScreen">
@@ -113,6 +138,12 @@ const DrawerNavigatorRoutes = (props) => {
         name="ProfileScreenStack"
         options={{drawerLabel: 'Profile'}}
         component={ProfileScreenStack}
+      />
+       <Drawer.Screen
+        name="HistoriqueScreenStack"
+        options={{drawerLabel: 'Historique'}}
+        component={HistoriqueScreenStack}
+        
       />
       <Drawer.Screen
         name="MedecineScreenStack"

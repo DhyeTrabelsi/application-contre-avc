@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
 import {Placeholder,PlaceholderMedia,PlaceholderLine,Fade} from 'rn-placeholder';
+
 var erreurconnexion=0;
 var n =0;
 const ProfileScreen = () => {
@@ -46,11 +47,9 @@ const ProfileScreen = () => {
   const [hypertension, sethypertension] = useState('');
   const [heart_disease, setheart_disease] = useState('');
   const [type_de_travail, settype_de_travail] = useState('');
-  var today = new Date();
-   
+  
   useEffect(() => {
     let unmounted =false
-
     const interval = setInterval(() => {
       if (!unmounted){ 
       getdata();
@@ -76,6 +75,7 @@ const ProfileScreen = () => {
       setheart_disease(heart_diseasenouvelle)
       sethypertension(hypertensionnouvelle)
       settype_de_travail(type_de_travailnouvelle)
+      setIsLoading(false)
 
       AsyncStorage.setItem('Patientavg_glucose_level', String(avg_glucose_levelnouvelle));
       AsyncStorage.setItem('Patientbirthday',String( birthdaynouvelle ));
@@ -94,8 +94,7 @@ const ProfileScreen = () => {
       AsyncStorage.setItem('heart_disease', String(heart_diseasenouvelle));
       AsyncStorage.setItem('hypertension', String(hypertensionnouvelle));
       AsyncStorage.setItem('type_de_travail', String(type_de_travailnouvelle));
-      setIsLoading(false)
-
+      
      }}
     }, 1000);
 
@@ -118,18 +117,18 @@ const ProfileScreen = () => {
       setever_marriednouvelle(String( response.data[n].ever_married))
       setfirstnamenouvelle(String( response.data[n].firstname))
       setgendernouvelle(String( response.data[n].gender))
-      setpoidsnouvelle( String(response.data[n].poids))
+      setpoidsnouvelle( String(response.data[n].poids[Object.keys(response.data[n].poids)[Object.keys(response.data[n].poids).length - 1]]))
       setpostionnouvelle(String( response.data[n].postion))
       setsmoking_statusnouvelle(String( response.data[n].smoking_status))
       settelephonenouvelle(String( response.data[n].telephone))
       setmedecinenouvelle(String( response.data[n].medecine))
       setlastnamenouvelle(String( response.data[n].lastname))
       setemailnouvelle(String( response.data[n].email))
-      setbminouvelle(String(response.data[n].bmi))
+      setbminouvelle(String(response.data[n].bmi[Object.keys(response.data[n].bmi)[Object.keys(response.data[n].bmi).length - 1]]))
       setbirthdaynouvelle(String( response.data[n].birthday))
-      setavg_glucose_levelnouvelle(String(response.data[n].avg_glucose_level))
-      setheart_diseasenouvelle(String(response.data[n].heart_disease))
-      sethypertensionnouvelle(String(response.data[n].hypertension))
+      setavg_glucose_levelnouvelle(String(response.data[n].avg_glucose_level[Object.keys(response.data[n].avg_glucose_level)[Object.keys(response.data[n].avg_glucose_level).length - 1]]))
+      setheart_diseasenouvelle(String(response.data[n].heart_disease[Object.keys(response.data[n].heart_disease)[Object.keys(response.data[n].heart_disease).length - 1]]))
+      sethypertensionnouvelle(String(response.data[n].hypertension[Object.keys(response.data[n].hypertension)[Object.keys(response.data[n].hypertension).length - 1]]))
       settype_de_travailnouvelle(String(response.data[n].type_de_travail)
       
       ) 

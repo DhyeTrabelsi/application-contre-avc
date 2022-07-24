@@ -7,6 +7,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import { ipconfig } from '../../Ipconfig';
+
 const EditProfile = () => {
   const [user, setUser] = useState('');
   const [firstname, setfirstname] = useState('');
@@ -16,9 +17,10 @@ const EditProfile = () => {
   const [ever_married, setever_married] = useState('');
   const [postion, setpostion] = useState('');
   const [typework, settypework] = useState('');
+
+  
   useEffect(() => {
     if (user===''){
-
     AsyncStorage.getItem('Patientuser').then((value) =>setUser(value));
     AsyncStorage.getItem('Patientever_married').then((value) =>setever_married(value));
     AsyncStorage.getItem('Patienttypework').then((value) =>settypework(value));
@@ -187,7 +189,7 @@ return (
 </Picker></View>
         </View>
 
-        <TouchableOpacity style={styles.commandButton} onPress={() => handleupdatepatient()}>
+        <TouchableOpacity style={styles.commandButton} onPress={() =>{handleupdatepatient()}}>
           <Text style={styles.panelButtonTitle}>Enregistrer</Text>
         </TouchableOpacity>
     </View>

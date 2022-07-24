@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import {ScrollView,View, Text, SafeAreaView,StyleSheet,Image,  TouchableOpacity,Alert} from 'react-native';
+import {ScrollView,View,ActivityIndicator, Text, SafeAreaView,StyleSheet,Image,  TouchableOpacity,Alert,Linking} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 import Loader from '../Components/Loader';
@@ -7,15 +7,22 @@ import Loader from '../Components/Loader';
 import { ipconfig } from '../../Ipconfig';
 const MedecineScreen = () => {
 const [users,setusers] = useState([]);
+const Loaddata = () =>(
+  <SafeAreaView style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
+      <View style={{alignContent:'center',alignItems:'center' ,marginTop :'20%'}}>
+      <ActivityIndicator size='large' color='#495D7D'></ActivityIndicator>   
+    </View>
+  </SafeAreaView>)
+  
 const Profilmed = () =>(
     
 <SafeAreaView style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
     <View style={styles.container}>
-      <Text style={{ marginTop : 10, marginLeft :20 , fontWeight: 'bold', color:'#455156', fontSize: 20 }}>Votre medecine</Text>
+      <Text style={{ marginTop : 20, marginLeft :20 , fontWeight: 'bold', color:'#455156', fontSize: 20 }}>Votre medecine</Text>
       <View style={{
           marginHorizontal: 20,
           marginTop : 20,
-          paddingVertical: 40,
+          paddingVertical: 20,
           shadowColor: 'gray',
           shadowOpacity: 0.5,
           shadowOffset: {
@@ -29,24 +36,45 @@ const Profilmed = () =>(
           alignItems: 'center'
       }}>
           <Image style={{ marginBottom : 10 }} />
-          <View style={{ flexDirection: 'row', marginTop : 5 }}>
+          <View style={{ flexDirection: 'row', marginTop : 8 }}>
               <Text style={styles.prefix}>Medecine</Text>
               <Text style={styles.content}>{first_name} {last_name}</Text>
           </View>
-          <View style={{ flexDirection: 'row', marginTop : 5 }}>
+          <View style={{ flexDirection: 'row', marginTop : 8 }}>
               <Text style={styles.prefix}>Email</Text>
               <Text style={styles.content}>{email}</Text>
           </View>
 
-          <View style={{ flexDirection: 'row', marginTop : 5 }}>
+          <View style={{ flexDirection: 'row', marginTop : 8 }}>
               <Text style={styles.prefix}>Location</Text>
               <Text style={styles.content}>{postion}</Text>
           </View> 
-           <View style={{ flexDirection: 'row', marginTop : 5 }}>
+           <View style={{ flexDirection: 'row', marginTop : 8 }}>
               <Text style={styles.prefix}>Telephone</Text>
               <Text style={styles.content}>{telephone}</Text>
           </View>
-
+          <TouchableOpacity style={styles.commandButton} onPress={() => {
+             Alert.alert(
+              'Envoyer email',
+              "Vous étes sure d'envoyer un email à "+first_name,
+              [
+                {
+                  text: 'Annuler',
+                  onPress: () => {
+                    return null;
+                  },
+                },
+                {
+                  text: 'Confirmer',
+                  onPress: () => {
+                    Linking.openURL('mailto:'+email)},
+                },
+              ],
+              {cancelable: false},
+            );
+            }}>
+          <Text style={styles.panelButtonTitle}>Envoyer Email</Text>
+        </TouchableOpacity>
       </View>
   </View>
 </SafeAreaView>)
@@ -58,7 +86,7 @@ const Demmandemed = () =>(
 
     <SafeAreaView key={user.username} style={{flex: 1,   backgroundColor: '#ffffff',marginBottom :10}}>
         <View style={styles.container}>
-          <Text style={{ marginTop : 10, marginLeft :20 , fontWeight: 'bold', color:'#455156', fontSize: 20 }}>{user.username}</Text>
+          <Text style={{ marginTop : 20, marginLeft :20 , fontWeight: 'bold', color:'#455156', fontSize: 20 }}>{user.username}</Text>
           <View style={{
               marginHorizontal: 20,
               marginTop : 20,
@@ -119,6 +147,7 @@ const Demmandemed = () =>(
     </SafeAreaView>))}
     </ScrollView>);
 const [isLoading, setIsLoading] = useState(true);
+const [isLoad, setIsLoad] = useState(true);
 const [med, setmed] = useState('');
 const [first_name, setfirst_name] = useState('');
 const [last_name, setlast_name] = useState('');
@@ -135,7 +164,11 @@ const getdatamed = () => {
     }).then(response=>{
       var n=0;
       if(med === 'null'){
-       setusers(response.data)}  
+       setusers(response.data)       
+       console.log(users)
+      }  
+       
+
        else{
         while (n < response.data.length ) {
           if(String(response.data[n].username)===String(med)){
@@ -144,6 +177,7 @@ const getdatamed = () => {
         setemail(String( response.data[n].email))
         setpostion( String(response.data[n].postion))
         settelephone(String( response.data[n].telephone))
+        setIsLoad(false)
             break;
           }n++;
         }}})
@@ -151,17 +185,20 @@ const getdatamed = () => {
           alert("Erreur de connexion..");
          })
     }
-  
 useEffect(() => {
   let unmounted =false
   const interval = setInterval(() => {
 
 if(!unmounted){
     getdatamed();
+
     AsyncStorage.getItem('Patientmedecine').then((value) =>setmed(value));
     AsyncStorage.getItem('Patientuser').then((value) =>setUser(value));
-    if(med === 'null'){setIsLoading(false)}
-    else{setIsLoading(true);}}},1000);
+    if(med === 'null'){    
+      setIsLoad(false)
+      setIsLoading(false)}
+    else{   
+      setIsLoading(true);}}},1000);
     return () => {
       clearInterval(interval);
       unmounted=true;
@@ -169,11 +206,10 @@ if(!unmounted){
 })
 
 const [loading, setLoading] = useState(false);
+
 const [user, setUser] = useState('');
 const Demande = (medecine) => {
   const DemandeJson = { "patient": String(user), "medecine":String(medecine),"resultat":"true"};
-  console.log(DemandeJson)
- 
           axios({
             headers: { 'Content-Type': 'application/json'},
             method: 'post',
@@ -184,7 +220,6 @@ const Demande = (medecine) => {
             if(response.data.message === "Demmande created successfully"){
               alert('Demande envoyé avec succès..');
             }  })
-          
             .catch((error) => {
            alert("Erreur d'envoyer la demande..");
           }) 
@@ -193,7 +228,7 @@ const Demande = (medecine) => {
   <ScrollView
      style={{backgroundColor: '#ffffff'}}showsVerticalScrollIndicator={false}>
     <ScrollView>
-    {isLoading ? <Profilmed/> : <Demmandemed/>}
+    {isLoad ? <Loaddata/> : isLoading ? <Profilmed/> : <Demmandemed/>}
     </ScrollView>
   </ScrollView>
   );
@@ -220,8 +255,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop : 15,
   },
-  
-
   panelButtonTitle: {
     fontSize: 17,
     fontWeight: '500',

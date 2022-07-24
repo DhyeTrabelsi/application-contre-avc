@@ -2,7 +2,7 @@ import 'react-native-gesture-handler';
  
 // Import React and Component
 import React from 'react';
-
+import { Platform } from 'react-native';
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -15,7 +15,7 @@ import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
 import MedDrawerNavigationRoutes from './Screen/MedDrawerNavigationRoutes';
 
 import OnboardingScreen from './Screen/OnboardingScreen';
- 
+
 const Stack = createStackNavigator();
  
 const Auth = () => {
